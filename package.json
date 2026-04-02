@@ -1,0 +1,27 @@
+{
+  "name": "ny-poetfolio",
+  "version": "1.0.0",
+  "description": "Portfolio website for Moreno, Jun Dave",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [
+    "portfolio",
+    "react",
+    "vite"
+  ],
+  "author": "Moreno, Jun Dave",
+  "license": "ISC",
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.0.1",
+    "vite": "^8.0.3"
+  },
+  "dependencies": {
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "react-router-dom": "^7.13.2"
+  }
+}

@@ -1,0 +1,236 @@
+.skills-page {
+  padding-top: 80px;
+  padding-bottom: 100px;
+}
+
+/* Tech Marquee Animation */
+.tech-marquee-wrapper {
+  width: 100%;
+  overflow: hidden;
+  padding: 40px 0;
+  background: linear-gradient(180deg, var(--gray-900) 0%, transparent 100%);
+  margin-bottom: 40px;
+}
+
+.tech-marquee {
+  display: flex;
+  width: 100%;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.tech-marquee-content {
+  display: flex;
+  animation: marquee 25s linear infinite;
+  gap: 60px;
+}
+
+.tech-marquee.reverse .tech-marquee-content {
+  animation: marquee-reverse 25s linear infinite;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marquee-reverse {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.tech-logo-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  min-width: 80px;
+  transition: all 0.3s ease;
+}
+
+.tech-logo-item:hover {
+  transform: scale(1.2);
+}
+
+.tech-logo-item i {
+  font-size: 40px;
+  transition: all 0.3s ease;
+  filter: grayscale(100%);
+}
+
+.tech-logo-item:hover i {
+  filter: grayscale(0%);
+}
+
+.tech-logo-item span {
+  font-size: 12px;
+  color: var(--gray-500);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+.tech-logo-item:hover span {
+  color: var(--white);
+}
+
+.skills-page.loaded .animate-item {
+  animation: fadeInUp 0.8s ease forwards;
+  opacity: 0;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 50px;
+  margin-top: 60px;
+}
+
+.skill-category {
+  padding: 40px;
+  border: 1px solid var(--gray-800);
+  transition: all 0.3s ease;
+}
+
+.skill-category:hover {
+  border-color: var(--white);
+  background: var(--gray-900);
+}
+
+.category-title {
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--gray-500);
+  margin-bottom: 25px;
+}
+
+.skill-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.skill-tag {
+  padding: 10px 20px;
+  background: transparent;
+  border: 1px solid var(--gray-700);
+  font-size: 14px;
+  color: var(--gray-300);
+  transition: all 0.3s ease;
+  cursor: default;
+}
+
+.skill-tag:hover {
+  border-color: var(--white);
+  color: var(--white);
+  transform: translateY(-3px);
+}
+
+.expertise-section {
+  margin-top: 100px;
+  padding-top: 80px;
+  border-top: 1px solid var(--gray-800);
+}
+
+.expertise-title {
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 50px;
+}
+
+.expertise-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+}
+
+.expertise-item {
+  padding: 40px 30px;
+  border: 1px solid var(--gray-800);
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.expertise-item:hover {
+  border-color: var(--white);
+  transform: translateY(-10px);
+}
+
+.expertise-icon {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 25px;
+  border: 1px solid var(--gray-700);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.expertise-item:hover .expertise-icon {
+  border-color: var(--white);
+  background: var(--white);
+  color: var(--black);
+}
+
+.expertise-icon i {
+  font-size: 24px;
+  color: var(--gray-400);
+  transition: all 0.3s ease;
+}
+
+.expertise-item:hover .expertise-icon i {
+  color: var(--black);
+}
+
+.expertise-item h4 {
+  font-size: 18px;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.expertise-item p {
+  font-size: 14px;
+  color: var(--gray-500);
+  line-height: 1.6;
+}
+
+@media (max-width: 1000px) {
+  .expertise-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .tech-logo-item i {
+    font-size: 30px;
+  }
+}
+
+@media (max-width: 700px) {
+  .skills-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .expertise-grid {
+    grid-template-columns: 1fr;
+  }
+}

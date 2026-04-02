@@ -1,0 +1,72 @@
+.theme-toggle {
+  position: fixed;
+  top: 100px;
+  right: 30px;
+  z-index: 1000;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.toggle-track {
+  width: 60px;
+  height: 30px;
+  background: var(--gray-800);
+  border-radius: 20px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+  border: 1px solid var(--gray-700);
+  transition: all 0.3s ease;
+}
+
+.theme-toggle:hover .toggle-track {
+  border-color: var(--accent-color, var(--white));
+}
+
+.sun-icon, .moon-icon {
+  font-size: 12px;
+  z-index: 1;
+  transition: all 0.3s ease;
+}
+
+.sun-icon {
+  color: #fbbf24;
+}
+
+.moon-icon {
+  color: #60a5fa;
+}
+
+.toggle-thumb {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  background: var(--white);
+  border-radius: 50%;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  left: 3px;
+}
+
+.toggle-thumb.light {
+  left: 3px;
+  background: #fbbf24;
+  box-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+}
+
+.toggle-thumb.dark {
+  left: calc(100% - 27px);
+  background: #60a5fa;
+  box-shadow: 0 0 10px rgba(96, 165, 250, 0.5);
+}
+
+@media (max-width: 768px) {
+  .theme-toggle {
+    top: auto;
+    bottom: 30px;
+    right: 20px;
+  }
+}
