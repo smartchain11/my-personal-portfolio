@@ -43,7 +43,7 @@ function Contact() {
             <div className="contact-details">
               <div className="contact-item">
                 <i className="fas fa-envelope"></i>
-                <span>markjohndavid.dev@gmail.com</span>
+                <span>morenojundave@gmail.com</span>
               </div>
               <div className="contact-item">
                 <i className="fas fa-map-marker-alt"></i>
