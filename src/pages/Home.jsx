@@ -35,7 +35,7 @@ function Home() {
           
           <div className="home-visual animate-item">
             <div className="profile-image-container">
-              <img src="/image/ouhmm.png" alt="Jun Dave Moreno" className="profile-image" />
+              <img src="/ouhmm.png" alt="Jun Dave Moreno" className="profile-image" />
               <div className="profile-border"></div>
               <div className="profile-border-2"></div>
             </div>

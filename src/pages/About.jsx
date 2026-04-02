@@ -53,7 +53,7 @@ function About() {
     }
   }, [theme])
 
-  const currentImage = theme === 'light' ? '/image/imageforwhite.png' : '/image/imageforblack.jpg'
+  const currentImage = theme === 'light' ? '/imageforwhite.png' : '/imageforblack.jpg'
 
   return (
     <div className={`about-page page ${loaded ? 'loaded' : ''}`}>
