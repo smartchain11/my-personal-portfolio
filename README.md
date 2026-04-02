@@ -1,42 +1,53 @@
-# Portfolio Website - Moreno, Jun Dave
+# Portfolio Website - Moreno, Jun Dave (Necry Talkie)
 
-A retro **BIOS/CRT Monitor** themed portfolio website built with React and Vite, featuring authentic terminal aesthetics and realistic CRT effects.
+A modern **professional portfolio** website built with React and Vite, featuring dark/light themes, animations, AI voice introduction, and a clean black & white aesthetic.
 
-## 🖥️ CRT Monitor Design Features
+🌐 **Live Site**: [morenojundave.me](https://morenojundave.me)
 
-- **Realistic CRT Monitor Frame** - Bezel and screen curvature
-- **Authentic Scan Lines** - Horizontal scan line effect
-- **Screen Flicker Animation** - Subtle CRT flicker
-- **Phosphor Glow** - Green terminal glow effect
-- **BIOS Boot Sequence** - System initialization on load
-- **Terminal-Style Interface** - Monospace fonts and command-line aesthetics
-- **Retro Color Scheme** - Classic green-on-black terminal colors
+## ✨ Features
+
+- **Dark/Light Theme Toggle** - Seamless theme switching with smooth transitions
+- **AI Voice Introduction** - Auto-plays voice narration on About page (Filipino male voice)
+- **Custom Cursor** - Interactive cursor with hover effects
+- **Typing Animation** - Intro screen with typewriter effect
+- **Responsive Design** - Works on all devices
+- **Animated Tech Stack** - Scrolling marquee of technology logos
+- **Theme-Aware Images** - Different photos for light/dark modes (sunglasses/glasses)
 
 ## 🚀 Technologies Used
 
-- **React** - Component-based UI library
-- **Vite** - Fast build tool and dev server
-- **CSS3** - Advanced CRT effects and animations
-- **VT323 Font** - Authentic retro terminal font
-- **Font Awesome** - Icon library
+- **React 19** - Component-based UI
+- **Vite** - Fast build tool
+- **React Router** - Multi-page navigation
+- **Web Speech API** - AI voice synthesis
+- **CSS3** - Animations & transitions
+- **Font Awesome** - Icons
+- **Google Fonts (Inter)** - Typography
 
 ## 📁 Project Structure
 
 ```
 ny-poetfolio/
+├── public/
+│   ├── ouhmm.png           - Home page photo
+│   ├── imageforblack.jpg   - About photo (dark mode)
+│   ├── imageforwhite.png   - About photo (light mode)
+│   └── ssss.ico            - Favicon
 ├── src/
 │   ├── components/
-│   │   ├── Navbar.jsx/css      - BIOS system navigation
-│   │   ├── Hero.jsx/css        - Boot sequence & terminal intro
-│   │   ├── About.jsx/css       - Profile data display
-│   │   ├── Skills.jsx/css      - System capabilities
-│   │   ├── Projects.jsx/css    - Executable files showcase
-│   │   ├── Contact.jsx/css     - Contact form terminal
-│   │   └── Footer.jsx/css      - System footer
-│   ├── App.jsx              - Main app with CRT frame
-│   ├── App.css              - Terminal box styles
-│   ├── main.jsx             - React entry point
-│   └── index.css            - CRT monitor effects & global styles
+│   │   ├── Navbar.jsx/css      - Navigation bar
+│   │   ├── ThemeToggle.jsx/css - Dark/light switch
+│   │   └── CustomCursor.jsx/css - Custom cursor
+│   ├── pages/
+│   │   ├── Intro.jsx/css   - Typing intro screen
+│   │   ├── Home.jsx/css    - Landing page
+│   │   ├── About.jsx/css   - About with AI voice
+│   │   ├── Skills.jsx/css  - Skills & tech stack
+│   │   ├── Projects.jsx/css - Project showcase
+│   │   └── Contact.jsx/css - Contact form
+│   ├── App.jsx             - Main app with router
+│   ├── App.css             - Global styles
+│   └── index.css           - CSS variables & reset
 ├── index.html
 ├── vite.config.js
 └── package.json
@@ -45,8 +56,8 @@ ny-poetfolio/
 ## 🛠️ Development
 
 ### Prerequisites
-- Node.js (v14 or higher)
-- npm or yarn
+- Node.js (v16 or higher)
+- npm
 
 ### Installation
 ```bash
@@ -57,82 +68,39 @@ npm install
 ```bash
 npm run dev
 ```
-The site will be available at `http://localhost:5173/`
 
 ### Build for Production
 ```bash
 npm run build
 ```
 
-### Preview Production Build
-```bash
-npm run preview
-```
-
-## ✨ CRT Effects Included
-
-1. **Monitor Bezel Frame** - 3D monitor frame with depth
-2. **Scan Lines** - Animated horizontal scan lines
-3. **Screen Flicker** - Randomized flicker animation
-4. **Text Glow** - Phosphor green glow on text
-5. **Boot Sequence** - BIOS-style system initialization
-6. **Cursor Blink** - Terminal cursor animation
-7. **Screen Curvature** - Subtle CRT screen curve effect
-8. **Custom Scrollbar** - Terminal-themed scrollbar
-
 ## 🎨 Color Scheme
 
-- **Primary Green**: `#33ff33` - Terminal text
-- **Glow Green**: `#00ff00` - Phosphor glow
-- **Amber**: `#ffb000` - System messages
-- **Screen Background**: `#001a00` - Dark green tint
-- **Monitor Frame**: `#1a1a1a` - Dark bezel
+### Dark Mode
+- Background: `#0a0a0a`
+- Text: `#ffffff`
+- Accent: `#a259ff`
 
-## 📝 Customization
+### Light Mode
+- Background: `#ffffff`
+- Text: `#0a0a0a`
+- Accent: `#a259ff`
 
-### Update Personal Information
+## 📱 Pages
 
-Edit the content in the following files:
-- `src/components/Hero.jsx` - Boot sequence, name, and roles
-- `src/components/About.jsx` - Personal info and stats
-- `src/components/Skills.jsx` - Technical skills
-- `src/components/Projects.jsx` - Project showcase
-- `src/components/Contact.jsx` - Contact details
+1. **Intro** - Animated typing of name, press any key to enter
+2. **Home** - Hero section with photo and CTA buttons
+3. **About** - Bio, stats, AI voice auto-play
+4. **Skills** - Tech logos marquee + skill categories
+5. **Projects** - Web & Figma projects with live links
+6. **Contact** - Contact form & social links
 
-### Modify CRT Effects
+## 🔗 Links
 
-Adjust CRT effects in `src/index.css`:
-```css
-/* Scan line speed */
-@keyframes scanline {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(10px); }
-}
-
-/* Change terminal color */
-:root {
-  --crt-green: #33ff33;
-  --crt-amber: #ffb000;
-}
-```
-
-### Change Monitor Size
-
-In `src/index.css`, adjust the monitor bezel:
-```css
-.crt-monitor {
-  padding: 40px; /* Increase for larger bezel */
-}
-```
-
-## 🎯 Design Philosophy
-
-This portfolio embraces the aesthetic of vintage computing:
-- **1970s-80s Terminal Era** - Green phosphor CRT displays
-- **BIOS Systems** - Boot sequences and system messages
-- **Command Line Interface** - Text-based navigation
-- **Monospace Typography** - VT323 and Share Tech Mono fonts
-- **Retro Gaming Monitors** - Authentic CRT effects
+- **GitHub**: [github.com/smartchain11](https://github.com/smartchain11)
+- **Facebook**: [facebook.com/necry.raizen11](https://www.facebook.com/necry.raizen11)
+- **YouTube**: [youtube.com/@necry_talkiexMorenoJD](https://www.youtube.com/@necry_talkiexMorenoJD)
+- **Email**: morenojundave@gmail.com
 
 ## 📄 License
 
@@ -140,11 +108,11 @@ ISC
 
 ## 👤 Author
 
-**Moreno, Jun Dave**
+**Moreno, Jun Dave (Necry Talkie)**
 - BSIT Student at ADSSU (formerly ASSCAT)
 - 2nd Year, Bachelor of Science in Information Technology
+- Age: 23 | Born: August 2, 2002
 
 ---
 
-**SYSTEM STATUS: READY**  
-Made with 💚 using React + Vite + Retro Love
+Made with 🖤 using React + Vite
