@@ -1,8 +1,17 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import emailjs from '@emailjs/browser'
 import './Contact.css'
+
+// EmailJS Configuration
+const EMAILJS_SERVICE_ID = 'service_hs0to6a'
+const EMAILJS_TEMPLATE_ID = 'template_kteo1tp'
+const EMAILJS_PUBLIC_KEY = '3WC_AxBIQ3Jy-1bgA'
 
 function Contact() {
   const [loaded, setLoaded] = useState(false)
+  const [sending, setSending] = useState(false)
+  const [status, setStatus] = useState({ type: '', message: '' })
+  const formRef = useRef()
 
   useEffect(() => {
     setLoaded(true)
@@ -21,11 +30,45 @@ function Contact() {
     })
   }
 
-  const handleSubmit = (e) => {
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return emailRegex.test(email)
+  }
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    // Handle form submission
-    console.log(formData)
-    alert('Message sent! (Demo)')
+    setStatus({ type: '', message: '' })
+
+    // Validate email format
+    if (!validateEmail(formData.email)) {
+      setStatus({ type: 'error', message: 'Please enter a valid email address (e.g., example@gmail.com)' })
+      return
+    }
+
+    // Validate message length (minimum 100 characters)
+    if (formData.message.trim().length < 100) {
+      setStatus({ type: 'error', message: `Message must be at least 100 characters. Currently: ${formData.message.trim().length}/100` })
+      return
+    }
+
+    setSending(true)
+
+    try {
+      await emailjs.sendForm(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        formRef.current,
+        EMAILJS_PUBLIC_KEY
+      )
+      
+      setStatus({ type: 'success', message: 'Message sent successfully! I\'ll get back to you soon.' })
+      setFormData({ name: '', email: '', message: '' })
+    } catch (error) {
+      console.error('EmailJS error:', error)
+      setStatus({ type: 'error', message: 'Failed to send message. Please try again or email me directly.' })
+    } finally {
+      setSending(false)
+    }
   }
 
   return (
@@ -64,7 +107,7 @@ function Contact() {
             </div>
           </div>
 
-          <form className="contact-form animate-item" onSubmit={handleSubmit}>
+          <form ref={formRef} className="contact-form animate-item" onSubmit={handleSubmit}>
             <div className="form-group">
               <label htmlFor="name">Name</label>
               <input
@@ -97,10 +140,20 @@ function Contact() {
                 onChange={handleChange}
                 required
               ></textarea>
+              <span className={`char-count ${formData.message.trim().length >= 100 ? 'valid' : ''}`}>
+                {formData.message.trim().length}/100 characters minimum
+              </span>
             </div>
-            <button type="submit" className="btn btn-primary">
-              Send Message
-              <i className="fas fa-arrow-right"></i>
+            
+            {status.message && (
+              <div className={`form-status ${status.type}`}>
+                {status.message}
+              </div>
+            )}
+            
+            <button type="submit" className="btn btn-primary" disabled={sending}>
+              {sending ? 'Sending...' : 'Send Message'}
+              {!sending && <i className="fas fa-arrow-right"></i>}
             </button>
           </form>
         </div>
