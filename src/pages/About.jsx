@@ -9,6 +9,7 @@ function About() {
   })
   const [isTransitioning, setIsTransitioning] = useState(false)
   const [isSpeaking, setIsSpeaking] = useState(false)
+  const [voiceReady, setVoiceReady] = useState(true)
   const hasSpoken = useRef(false)
 
   const aboutText = `Hello! I'm Jun Dave Moreno, also known as Necry Talkie. I'm a 23-year-old Information Technology student at ADSSU, currently in my 3rd year of BSIT. I was born on August 2, 2002, and I'm passionate about technology, web development, and system servicing. I specialize in computer system servicing, networking troubleshooting, and full-stack development. I enjoy creating responsive web applications and mobile app designs using modern technologies. I am based in San Francisco, Agusan Del Sur, Philippines. Feel free to explore my portfolio and connect with me!`
@@ -17,8 +18,12 @@ function About() {
     if (!('speechSynthesis' in window) || hasSpoken.current) return false
 
     const voices = window.speechSynthesis.getVoices()
-    if (voices.length === 0) return false
+    if (voices.length === 0) {
+      setVoiceReady(false)
+      return false
+    }
 
+    setVoiceReady(true)
     hasSpoken.current = true
     window.speechSynthesis.cancel()
 
@@ -58,7 +63,17 @@ function About() {
 
   const handlePlayVoice = () => {
     hasSpoken.current = false
-    speak()
+    if (!('speechSynthesis' in window)) return
+    const voices = window.speechSynthesis.getVoices()
+    if (voices.length > 0) {
+      speak()
+    } else {
+      window.speechSynthesis.onvoiceschanged = () => {
+        speak()
+        window.speechSynthesis.onvoiceschanged = null
+      }
+      window.speechSynthesis.getVoices()
+    }
   }
 
   useEffect(() => {
@@ -75,6 +90,7 @@ function About() {
           speak()
           window.speechSynthesis.onvoiceschanged = null
         }
+        window.speechSynthesis.getVoices()
       }
     }
     setTimeout(trySpeak, 500)
@@ -142,9 +158,9 @@ function About() {
                 </div>
               </div>
             ) : (
-              <button className="voice-btn" onClick={handlePlayVoice}>
-                <i className="fas fa-play"></i>
-                <span>Play Introduction</span>
+              <button className={`voice-btn ${!voiceReady ? 'disabled' : ''}`} onClick={handlePlayVoice} disabled={!voiceReady}>
+                <i className={`fas ${voiceReady ? 'fa-play' : 'fa-exclamation-circle'}`}></i>
+                <span>{voiceReady ? 'Play Introduction' : 'Speech Unavailable'}</span>
               </button>
             )}
           </div>

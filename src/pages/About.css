@@ -38,6 +38,19 @@
   background: var(--gray-900);
 }
 
+.voice-btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  border-color: var(--gray-800);
+  color: var(--gray-500);
+}
+
+.voice-btn.disabled:hover {
+  background: transparent;
+  border-color: var(--gray-800);
+  color: var(--gray-500);
+}
+
 .voice-btn i {
   font-size: 14px;
 }
