@@ -13,12 +13,13 @@ function About() {
 
   const aboutText = `Hello! I'm Jun Dave Moreno, also known as Necry Talkie. I'm a 23-year-old Information Technology student at ADSSU, currently in my 3rd year of BSIT. I was born on August 2, 2002, and I'm passionate about technology, web development, and system servicing. I specialize in computer system servicing, networking troubleshooting, and full-stack development. I enjoy creating responsive web applications and mobile app designs using modern technologies. I am based in San Francisco, Agusan Del Sur, Philippines. Feel free to explore my portfolio and connect with me!`
 
-  const speakNative = () => {
-    if (!('speechSynthesis' in window)) return false
+  const speak = () => {
+    if (!('speechSynthesis' in window) || hasSpoken.current) return false
 
     const voices = window.speechSynthesis.getVoices()
     if (voices.length === 0) return false
 
+    hasSpoken.current = true
     window.speechSynthesis.cancel()
 
     const utterance = new SpeechSynthesisUtterance(aboutText)
@@ -55,52 +56,6 @@ function About() {
     return true
   }
 
-  const speakFallback = () => {
-    const sentences = aboutText.match(/[^.!?]*[.!?]/g) || [aboutText]
-    let index = 0
-
-    const playNext = () => {
-      if (index >= sentences.length) {
-        setIsSpeaking(false)
-        return
-      }
-      const chunk = sentences[index].trim()
-      if (chunk.length < 2) {
-        index++
-        playNext()
-        return
-      }
-      const audio = new Audio(
-        `/tts?ie=UTF-8&q=${encodeURIComponent(chunk)}&tl=en&client=tw-ob`
-      )
-      audio.onended = () => {
-        index++
-        playNext()
-      }
-      audio.onerror = () => {
-        setIsSpeaking(false)
-        hasSpoken.current = false
-      }
-      audio.play().catch(() => {
-        setIsSpeaking(false)
-        hasSpoken.current = false
-      })
-    }
-    setIsSpeaking(true)
-    playNext()
-    return true
-  }
-
-  const speak = () => {
-    if (hasSpoken.current) return
-    hasSpoken.current = true
-    setIsSpeaking(true)
-    
-    if (!speakNative()) {
-      speakFallback()
-    }
-  }
-
   const handlePlayVoice = () => {
     hasSpoken.current = false
     speak()
@@ -110,30 +65,19 @@ function About() {
     setLoaded(true)
 
     let retries = 0
-    const tryAutoSpeak = () => {
-      if (speakNative()) return
-      
-      const voices = window.speechSynthesis.getVoices()
-      if (voices.length > 0) {
-        speakNative()
-      } else if (retries < 3) {
+    const trySpeak = () => {
+      if (speak()) return
+      if (retries < 3) {
         retries++
-        setTimeout(tryAutoSpeak, 800)
+        setTimeout(trySpeak, 800)
       } else {
-        hasSpoken.current = true
-        setIsSpeaking(true)
-        speakFallback()
-      }
-    }
-    setTimeout(() => {
-      if (speakNative()) return
-      window.speechSynthesis.onvoiceschanged = () => {
-        if (!speakNative()) {
+        window.speechSynthesis.onvoiceschanged = () => {
+          speak()
           window.speechSynthesis.onvoiceschanged = null
         }
       }
-      setTimeout(tryAutoSpeak, 500)
-    }, 300)
+    }
+    setTimeout(trySpeak, 500)
     
     const targets = { age: 23, year: 3, languages: 10 }
     const duration = 2000
