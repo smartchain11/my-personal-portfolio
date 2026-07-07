@@ -90,7 +90,7 @@ function Contact() {
               </div>
               <div className="contact-item">
                 <i className="fas fa-map-marker-alt"></i>
-                <span>Philippines</span>
+                <span>Philippines, Agusan Del Sur, San Francisco</span>
               </div>
             </div>
 

@@ -11,96 +11,131 @@ function About() {
   const [isSpeaking, setIsSpeaking] = useState(false)
   const hasSpoken = useRef(false)
 
-  const aboutText = `
-    Hello! I'm Jun Dave Moreno, also known as Necry Talkie.
-    I'm a 23-year-old Information Technology student at ADSSU, currently in my 2nd year of BSIT.
-    I was born on August 2, 2002, and I'm passionate about technology, web development, and system servicing.
-    I specialize in computer system servicing, networking troubleshooting, and full-stack development.
-    I enjoy creating responsive web applications and mobile app designs using modern technologies.
-    Feel free to explore my portfolio and connect with me!
-  `
+  const aboutText = `Hello! I'm Jun Dave Moreno, also known as Necry Talkie. I'm a 23-year-old Information Technology student at ADSSU, currently in my 3rd year of BSIT. I was born on August 2, 2002, and I'm passionate about technology, web development, and system servicing. I specialize in computer system servicing, networking troubleshooting, and full-stack development. I enjoy creating responsive web applications and mobile app designs using modern technologies. I am based in San Francisco, Agusan Del Sur, Philippines. Feel free to explore my portfolio and connect with me!`
+
+  const speakNative = () => {
+    if (!('speechSynthesis' in window)) return false
+
+    const voices = window.speechSynthesis.getVoices()
+    if (voices.length === 0) return false
+
+    window.speechSynthesis.cancel()
+
+    const utterance = new SpeechSynthesisUtterance(aboutText)
+    utterance.rate = 0.95
+    utterance.pitch = 0.9
+    utterance.volume = 1
+
+    const filipinoVoice = voices.find(voice => 
+      voice.lang.includes('fil') || 
+      voice.lang.includes('tl') ||
+      voice.name.toLowerCase().includes('filipino') ||
+      voice.name.toLowerCase().includes('tagalog')
+    )
+    
+    const maleVoice = voices.find(voice => 
+      voice.name.toLowerCase().includes('male') ||
+      voice.name.includes('David') ||
+      voice.name.includes('Mark') ||
+      voice.name.includes('James') ||
+      voice.name.includes('Google US English Male')
+    ) || voices.find(voice => voice.lang.includes('en-US'))
+    
+    if (filipinoVoice) {
+      utterance.voice = filipinoVoice
+    } else if (maleVoice) {
+      utterance.voice = maleVoice
+    }
+
+    utterance.onstart = () => setIsSpeaking(true)
+    utterance.onend = () => setIsSpeaking(false)
+    utterance.onerror = () => setIsSpeaking(false)
+
+    window.speechSynthesis.speak(utterance)
+    return true
+  }
+
+  const speakFallback = () => {
+    const sentences = aboutText.match(/[^.!?]*[.!?]/g) || [aboutText]
+    let index = 0
+
+    const playNext = () => {
+      if (index >= sentences.length) {
+        setIsSpeaking(false)
+        return
+      }
+      const chunk = sentences[index].trim()
+      if (chunk.length < 2) {
+        index++
+        playNext()
+        return
+      }
+      const audio = new Audio(
+        `/tts?ie=UTF-8&q=${encodeURIComponent(chunk)}&tl=en&client=tw-ob`
+      )
+      audio.onended = () => {
+        index++
+        playNext()
+      }
+      audio.onerror = () => {
+        setIsSpeaking(false)
+        hasSpoken.current = false
+      }
+      audio.play().catch(() => {
+        setIsSpeaking(false)
+        hasSpoken.current = false
+      })
+    }
+    setIsSpeaking(true)
+    playNext()
+    return true
+  }
 
   const speak = () => {
-    if ('speechSynthesis' in window && !hasSpoken.current) {
-      hasSpoken.current = true
-      
-      // Cancel any ongoing speech
-      window.speechSynthesis.cancel()
-
-      const utterance = new SpeechSynthesisUtterance(aboutText)
-      utterance.rate = 0.95
-      utterance.pitch = 0.9  // Lower pitch for male voice
-      utterance.volume = 1
-
-      // Try to get a Filipino voice, fallback to English male
-      const voices = window.speechSynthesis.getVoices()
-      const filipinoVoice = voices.find(voice => 
-        voice.lang.includes('fil') || 
-        voice.lang.includes('tl') ||
-        voice.name.toLowerCase().includes('filipino') ||
-        voice.name.toLowerCase().includes('tagalog')
-      )
-      
-      const maleVoice = voices.find(voice => 
-        voice.name.toLowerCase().includes('male') ||
-        voice.name.includes('David') ||
-        voice.name.includes('Mark') ||
-        voice.name.includes('James') ||
-        voice.name.includes('Google US English Male')
-      ) || voices.find(voice => voice.lang.includes('en-US'))
-      
-      if (filipinoVoice) {
-        utterance.voice = filipinoVoice
-      } else if (maleVoice) {
-        utterance.voice = maleVoice
-      }
-
-      utterance.onstart = () => setIsSpeaking(true)
-      utterance.onend = () => setIsSpeaking(false)
-      utterance.onerror = () => setIsSpeaking(false)
-
-      window.speechSynthesis.speak(utterance)
+    if (hasSpoken.current) return
+    hasSpoken.current = true
+    setIsSpeaking(true)
+    
+    if (!speakNative()) {
+      speakFallback()
     }
+  }
+
+  const handlePlayVoice = () => {
+    hasSpoken.current = false
+    speak()
   }
 
   useEffect(() => {
     setLoaded(true)
-    
-    // Load voices and auto-play
-    if ('speechSynthesis' in window) {
-      const loadVoicesAndSpeak = () => {
-        const voices = window.speechSynthesis.getVoices()
-        if (voices.length > 0) {
-          setTimeout(speak, 500) // Small delay for smooth transition
+
+    let retries = 0
+    const tryAutoSpeak = () => {
+      if (speakNative()) return
+      
+      const voices = window.speechSynthesis.getVoices()
+      if (voices.length > 0) {
+        speakNative()
+      } else if (retries < 3) {
+        retries++
+        setTimeout(tryAutoSpeak, 800)
+      } else {
+        hasSpoken.current = true
+        setIsSpeaking(true)
+        speakFallback()
+      }
+    }
+    setTimeout(() => {
+      if (speakNative()) return
+      window.speechSynthesis.onvoiceschanged = () => {
+        if (!speakNative()) {
+          window.speechSynthesis.onvoiceschanged = null
         }
       }
-
-      // Voices might load async
-      if (window.speechSynthesis.getVoices().length > 0) {
-        setTimeout(speak, 500)
-      } else {
-        window.speechSynthesis.onvoiceschanged = loadVoicesAndSpeak
-      }
-    }
+      setTimeout(tryAutoSpeak, 500)
+    }, 300)
     
-    // Watch for theme changes
-    const checkTheme = () => {
-      const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark'
-      if (currentTheme !== theme) {
-        setIsTransitioning(true)
-        setTimeout(() => {
-          setTheme(currentTheme)
-          setTimeout(() => setIsTransitioning(false), 300)
-        }, 150)
-      }
-    }
-
-    const observer = new MutationObserver(checkTheme)
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
-    
-    const interval = setInterval(checkTheme, 100)
-    
-    const targets = { age: 23, year: 2, languages: 10 }
+    const targets = { age: 23, year: 3, languages: 10 }
     const duration = 2000
     const steps = 60
     const stepTime = duration / steps
@@ -118,10 +153,32 @@ function About() {
 
     return () => {
       clearInterval(timer)
-      clearInterval(interval)
-      observer.disconnect()
       window.speechSynthesis.cancel()
     }
+  }, [])
+
+  useEffect(() => {
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark'
+    if (currentTheme !== theme) {
+      setIsTransitioning(true)
+      const t1 = setTimeout(() => {
+        setTheme(currentTheme)
+        const t2 = setTimeout(() => setIsTransitioning(false), 300)
+        return () => clearTimeout(t2)
+      }, 150)
+      return () => clearTimeout(t1)
+    }
+  }, [theme])
+
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark'
+      if (currentTheme !== theme) {
+        setTheme(currentTheme)
+      }
+    })
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
+    return () => observer.disconnect()
   }, [theme])
 
   const currentImage = theme === 'light' ? '/imageforwhite.png' : '/imageforblack.jpg'
@@ -131,15 +188,22 @@ function About() {
       <div className="container">
         <div className="about-header">
           <h1 className="section-title animate-item">About Me</h1>
-          {isSpeaking && (
-            <div className="speaking-indicator animate-item">
-              <i className="fas fa-volume-up"></i>
-              <span>Speaking...</span>
-              <div className="sound-waves">
-                <span></span><span></span><span></span>
+          <div className="about-voice-controls animate-item">
+            {isSpeaking ? (
+              <div className="speaking-indicator">
+                <i className="fas fa-volume-up"></i>
+                <span>Playing...</span>
+                <div className="sound-waves">
+                  <span></span><span></span><span></span>
+                </div>
               </div>
-            </div>
-          )}
+            ) : (
+              <button className="voice-btn" onClick={handlePlayVoice}>
+                <i className="fas fa-play"></i>
+                <span>Play Introduction</span>
+              </button>
+            )}
+          </div>
         </div>
         
         <div className="about-grid">
@@ -169,7 +233,7 @@ function About() {
             
             <p className="about-text animate-item">
               I'm a 23-year-old Information Technology student at ADSSU (formerly ASSCAT), 
-              currently in my 2nd year of BSIT. Born on August 2, 2002, I'm passionate about 
+              currently in my 3rd year of BSIT. Born on August 2, 2002, I'm passionate about 
               technology, web development, and system servicing.
             </p>
             
@@ -178,6 +242,11 @@ function About() {
               full-stack development. I enjoy creating responsive web applications and mobile 
               app designs using modern technologies.
             </p>
+
+            <div className="about-address animate-item">
+              <h3><i className="fas fa-map-marker-alt"></i> Location</h3>
+              <p>Philippines, Agusan Del Sur, San Francisco</p>
+            </div>
 
             <div className="about-stats animate-item">
               <div className="stat-item">
